@@ -231,4 +231,608 @@
             <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
-              <path d="
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          );
+        case "cloud":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
+            </svg>
+          );
+        case "check":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+          );
+        case "alert":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+              <path d="M12 9v4M12 17h.01" />
+            </svg>
+          );
+        case "copy":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          );
+        case "download":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+            </svg>
+          );
+        case "sparkle":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3Z" />
+            </svg>
+          );
+        case "trash":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+            </svg>
+          );
+        case "skip":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <polygon points="5 4 15 12 5 20 5 4" />
+              <line x1="19" y1="5" x2="19" y2="19" />
+            </svg>
+          );
+        case "up":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path d="m18 15-6-6-6 6" />
+            </svg>
+          );
+        case "down":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          );
+        case "sliders":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <line x1="4" y1="21" x2="4" y2="14" />
+              <line x1="4" y1="10" x2="4" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="12" />
+              <line x1="12" y1="8" x2="12" y2="3" />
+              <line x1="20" y1="21" x2="20" y2="16" />
+              <line x1="20" y1="12" x2="20" y2="3" />
+              <line x1="1" y1="14" x2="7" y2="14" />
+              <line x1="9" y1="8" x2="15" y2="8" />
+              <line x1="17" y1="16" x2="23" y2="16" />
+            </svg>
+          );
+        case "reset":
+          return (
+            <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+              <path d="M3 3v5h5" />
+            </svg>
+          );
+        default:
+          return null;
+      }
+    };
+
+    // =========================================================================
+    // 5. HELPER TO PARSE FIREBASE CONFIG INPUT
+    // =========================================================================
+    function parseFirebaseConfigInput(rawText) {
+      if (!rawText || !rawText.trim()) return null;
+      let cleaned = rawText.trim();
+      const firstBrace = cleaned.indexOf("{");
+      const lastBrace = cleaned.lastIndexOf("}");
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        cleaned = cleaned.slice(firstBrace, lastBrace + 1);
+      }
+      try {
+        const parsed = JSON.parse(cleaned);
+        if (parsed && parsed.apiKey && parsed.projectId) return parsed;
+      } catch (_) {}
+
+      try {
+        const jsonified = cleaned
+          .replace(/\/\/.*$/gm, "")
+          .replace(/\/\*[\s\S]*?\*\//g, "")
+          .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
+          .replace(/'/g, '"')
+          .replace(/,\s*}/g, "}");
+        const parsed = JSON.parse(jsonified);
+        if (parsed && parsed.apiKey && parsed.projectId) return parsed;
+      } catch (_) {}
+
+      return null;
+    }
+
+    // =========================================================================
+    // 6. MAIN REACT COMPONENT (Open Seniority Order — No Passwords/PINs)
+    // =========================================================================
+    function App() {
+      const getInitialLocalData = () => {
+        try {
+          const saved = localStorage.getItem(LOCAL_STATE_KEY);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed.residents) && parsed.residents.length > 0) {
+              return parsed;
+            }
+          }
+        } catch (_) {}
+        return {
+          residents: INITIAL_RESIDENTS,
+          customRotations: []
+        };
+      };
+
+      const initialData = getInitialLocalData();
+
+      // Core shared state
+      const [residents, setResidents] = useState(initialData.residents);
+      const [customRotations, setCustomRotations] = useState(initialData.customRotations || []);
+
+      // Firebase connection state
+      const [fbConfig, setFbConfig] = useState(() => {
+        if (HARDCODED_FIREBASE_CONFIG) return HARDCODED_FIREBASE_CONFIG;
+        try {
+          const savedCfg = localStorage.getItem(LOCAL_FB_CONFIG_KEY);
+          return savedCfg ? JSON.parse(savedCfg) : null;
+        } catch (_) {
+          return null;
+        }
+      });
+      const [fbStatus, setFbStatus] = useState("disconnected");
+      const [fbErrorMsg, setFbErrorMsg] = useState("");
+      const dbRef = useRef(null);
+
+      // UI Navigation & Filters
+      const [activeTab, setActiveTab] = useState("calendar");
+      const [selectedMonth, setSelectedMonth] = useState("ALL");
+
+      // Booking Confirmation Modal State (No PIN required)
+      const [bookingModal, setBookingModal] = useState(null); // { week, isThirdSlot }
+
+      // Firebase Config Modal State
+      const [showFbModal, setShowFbModal] = useState(false);
+      const [fbConfigText, setFbConfigText] = useState("");
+      const [fbModalError, setFbModalError] = useState("");
+
+      // Custom rotation input
+      const [newRotationInput, setNewRotationInput] = useState("");
+
+      // Reset confirmation modal
+      const [showResetConfirm, setShowResetConfirm] = useState(false);
+
+      // Toast & Copy state
+      const [toast, setToast] = useState(null);
+      const [copied, setCopied] = useState(false);
+
+      const showToast = (message, type = "success") => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 4000);
+      };
+
+      // =======================================================================
+      // FIREBASE REALTIME CONNECTION & LISTENER
+      // =======================================================================
+      useEffect(() => {
+        let unsubscribe = null;
+        let cancelled = false;
+
+        const connectFirestore = async () => {
+          if (!fbConfig) {
+            setFbStatus("disconnected");
+            dbRef.current = null;
+            return;
+          }
+          if (!window.FirebaseBridge) {
+            return;
+          }
+
+          setFbStatus("connecting");
+          setFbErrorMsg("");
+
+          try {
+            const { initializeApp, getApps, deleteApp, getFirestore, doc, onSnapshot, getDoc, setDoc } =
+              window.FirebaseBridge;
+
+            const existingApps = getApps();
+            for (const app of existingApps) {
+              await deleteApp(app);
+            }
+
+            const app = initializeApp(fbConfig);
+            const db = getFirestore(app);
+            dbRef.current = db;
+
+            const scheduleDocRef = doc(db, FIRESTORE_DOC_PATH[0], FIRESTORE_DOC_PATH[1]);
+
+            const snap = await getDoc(scheduleDocRef);
+            if (!snap.exists()) {
+              await setDoc(scheduleDocRef, {
+                residents,
+                customRotations,
+                updatedAt: new Date().toISOString()
+              });
+            }
+
+            unsubscribe = onSnapshot(
+              scheduleDocRef,
+              (docSnap) => {
+                if (cancelled) return;
+                setFbStatus("connected");
+                if (docSnap.exists()) {
+                  const data = docSnap.data();
+                  if (Array.isArray(data.residents) && data.residents.length > 0) {
+                    setResidents(data.residents);
+                  }
+                  if (Array.isArray(data.customRotations)) {
+                    setCustomRotations(data.customRotations);
+                  }
+                }
+              },
+              (err) => {
+                if (cancelled) return;
+                console.error("Firestore onSnapshot error:", err);
+                setFbStatus("error");
+                setFbErrorMsg(err.message || "Firestore bağlantı hatası.");
+              }
+            );
+          } catch (err) {
+            if (cancelled) return;
+            console.error("Firebase init error:", err);
+            setFbStatus("error");
+            setFbErrorMsg(err.message || "Firebase yapılandırması geçersiz.");
+          }
+        };
+
+        connectFirestore();
+        const handleBridgeReady = () => connectFirestore();
+        window.addEventListener("firebase-bridge-ready", handleBridgeReady);
+
+        return () => {
+          cancelled = true;
+          window.removeEventListener("firebase-bridge-ready", handleBridgeReady);
+          if (unsubscribe) unsubscribe();
+        };
+      }, [fbConfig]);
+
+      // Persist state locally + push to Firestore
+      const persistState = async (nextResidents, nextCustomRotations = customRotations) => {
+        setResidents(nextResidents);
+        setCustomRotations(nextCustomRotations);
+
+        try {
+          localStorage.setItem(
+            LOCAL_STATE_KEY,
+            JSON.stringify({
+              residents: nextResidents,
+              customRotations: nextCustomRotations
+            })
+          );
+        } catch (_) {}
+
+        if (dbRef.current && window.FirebaseBridge && fbStatus === "connected") {
+          try {
+            const { doc, setDoc } = window.FirebaseBridge;
+            const scheduleDocRef = doc(dbRef.current, FIRESTORE_DOC_PATH[0], FIRESTORE_DOC_PATH[1]);
+            await setDoc(scheduleDocRef, {
+              residents: nextResidents,
+              customRotations: nextCustomRotations,
+              updatedAt: new Date().toISOString()
+            });
+          } catch (err) {
+            console.error("Failed to sync to Firestore:", err);
+            showToast("Bulut kaydı sırasında hata oluştu: " + err.message, "error");
+          }
+        }
+      };
+
+      // =======================================================================
+      // COMPUTED VALUES & SCHEDULING RULES
+      // =======================================================================
+      const allRotations = useMemo(() => {
+        return Array.from(new Set([...DEFAULT_ROTATIONS, ...customRotations]));
+      }, [customRotations]);
+
+      // Strictly follows seniority order (top to bottom)
+      const currentChooser = useMemo(() => {
+        const nextRegular = residents.find((r) => !r.bookedWeekId && !r.skipped);
+        if (nextRegular) return nextRegular;
+        return residents.find((r) => !r.bookedWeekId) || null;
+      }, [residents]);
+
+      const currentChooserRank = useMemo(() => {
+        if (!currentChooser) return null;
+        return residents.findIndex((r) => r.id === currentChooser.id) + 1;
+      }, [residents, currentChooser]);
+
+      const bookedCount = useMemo(() => residents.filter((r) => r.bookedWeekId).length, [residents]);
+      const remainingCount = residents.length - bookedCount;
+
+      const monthsList = useMemo(() => {
+        const list = [];
+        LEAVE_WEEKS.forEach((w) => {
+          if (!list.includes(w.month)) list.push(w.month);
+        });
+        return list;
+      }, []);
+
+      const getWeekBookings = (weekId) => {
+        return residents.filter((r) => r.bookedWeekId === weekId);
+      };
+
+      const conflictWarnings = useMemo(() => {
+        const list = [];
+        LEAVE_WEEKS.forEach((w) => {
+          const booked = getWeekBookings(w.id);
+          const seen = {};
+          booked.forEach((b) => {
+            const rot = (b.rotation || "").trim();
+            if (!rot) return;
+            if (seen[rot]) {
+              list.push({ weekLabel: w.label, rotation: rot, names: `${seen[rot]} & ${b.name}` });
+            } else {
+              seen[rot] = b.name;
+            }
+          });
+        });
+        return list;
+      }, [residents]);
+
+      // Evaluate week eligibility for `currentChooser`
+      const evaluateWeek = (week) => {
+        const bookings = getWeekBookings(week.id);
+        const others = currentChooser ? bookings.filter((b) => b.id !== currentChooser.id) : bookings;
+        const count = others.length;
+
+        if (!currentChooser) {
+          return { canBook: false, status: "DONE", reason: "Tüm asistanların seçimi tamamlandı." };
+        }
+
+        if (currentChooser.bookedWeekId === week.id) {
+          return { canBook: false, status: "OWN", reason: "Mevcut seçiminiz bu hafta." };
+        }
+
+        // Same-rotation rule (empty rotation does NOT conflict)
+        const chooserRot = (currentChooser.rotation || "").trim().toLowerCase();
+        if (chooserRot !== "") {
+          const sameRotPerson = others.find(
+            (b) => (b.rotation || "").trim().toLowerCase() === chooserRot
+          );
+          if (sameRotPerson) {
+            return {
+              canBook: false,
+              status: "ROTATION_LOCKED",
+              conflictPerson: sameRotPerson,
+              reason: `Aynı Rotasyon Dolu (${sameRotPerson.rotation}: ${sameRotPerson.name})`
+            };
+          }
+        }
+
+        // Capacity rule: max 2 preferred, 3rd optional/tolerated
+        if (count >= 3) {
+          return { canBook: false, status: "FULL_3", reason: "Dolu - Maks 3" };
+        }
+
+        if (count === 2) {
+          return {
+            canBook: true,
+            isThirdSlot: true,
+            status: "THIRD_OPTIONAL",
+            reason: "2 Kişi Dolu - 3. Kişi Opsiyonel"
+          };
+        }
+
+        return {
+          canBook: true,
+          isThirdSlot: false,
+          status: "OPEN",
+          reason: `Müsait (${count}/2)`
+        };
+      };
+
+      // =======================================================================
+      // HANDLERS: DIRECT BOOKING, CANCEL, REORDER, ROTATIONS
+      // =======================================================================
+      const handleWeekCardClick = (week) => {
+        if (!currentChooser) return;
+        const evalRes = evaluateWeek(week);
+        if (!evalRes.canBook) {
+          showToast(evalRes.reason, "error");
+          return;
+        }
+        setBookingModal({
+          week,
+          isThirdSlot: Boolean(evalRes.isThirdSlot)
+        });
+      };
+
+      const handleConfirmBooking = async () => {
+        if (!bookingModal || !currentChooser) return;
+
+        const nextResidents = residents.map((r) =>
+          r.id === currentChooser.id
+            ? { ...r, bookedWeekId: bookingModal.week.id, skipped: false }
+            : r
+        );
+
+        await persistState(nextResidents);
+        showToast(`${currentChooser.name} için "${bookingModal.week.label}" onaylandı!`, "success");
+        setBookingModal(null);
+      };
+
+      const handleCancelBooking = async (residentId) => {
+        const target = residents.find((r) => r.id === residentId);
+        if (!target) return;
+        const nextResidents = residents.map((r) =>
+          r.id === residentId ? { ...r, bookedWeekId: null } : r
+        );
+        await persistState(nextResidents);
+        showToast(`${target.name} izin kaydı iptal edildi.`, "info");
+      };
+
+      const handleToggleSkip = async (residentId) => {
+        const target = residents.find((r) => r.id === residentId);
+        if (!target) return;
+        const nextResidents = residents.map((r) =>
+          r.id === residentId ? { ...r, skipped: !r.skipped } : r
+        );
+        await persistState(nextResidents);
+        showToast(
+          target.skipped
+            ? `${target.name} tekrar aktif sıraya alındı.`
+            : `${target.name} sırası geçici olarak atlandı.`,
+          "info"
+        );
+      };
+
+      const handleMoveSeniority = async (index, direction) => {
+        const targetIndex = index + direction;
+        if (targetIndex < 0 || targetIndex >= residents.length) return;
+        const copy = [...residents];
+        const [moved] = copy.splice(index, 1);
+        copy.splice(targetIndex, 0, moved);
+        await persistState(copy);
+        showToast(`${moved.name} kıdem sırası #${targetIndex + 1} yapıldı.`, "info");
+      };
+
+      const handleJumpSeniority = async (fromIndex, toIndex) => {
+        if (fromIndex === toIndex || toIndex < 0 || toIndex >= residents.length) return;
+        const copy = [...residents];
+        const [moved] = copy.splice(fromIndex, 1);
+        copy.splice(toIndex, 0, moved);
+        await persistState(copy);
+        showToast(`${moved.name} kıdem sırası #${toIndex + 1} yapıldı.`, "info");
+      };
+
+      const handleChangeRotation = async (residentId, newRot) => {
+        const nextResidents = residents.map((r) =>
+          r.id === residentId ? { ...r, rotation: newRot } : r
+        );
+        await persistState(nextResidents);
+        showToast("Rotasyon güncellendi.", "success");
+      };
+
+      const handleAddCustomRotation = async (e) => {
+        e.preventDefault();
+        const trimmed = newRotationInput.trim();
+        if (!trimmed) return;
+        if (!allRotations.some((r) => r.toLowerCase() === trimmed.toLowerCase())) {
+          const nextCustom = [...customRotations, trimmed];
+          await persistState(residents, nextCustom);
+          showToast(`"${trimmed}" rotasyon listesine eklendi.`, "success");
+        }
+        setNewRotationInput("");
+      };
+
+      const handleResetAll = async () => {
+        await persistState(INITIAL_RESIDENTS, []);
+        setShowResetConfirm(false);
+        showToast("Tüm liste varsayılan kıdem ve rotasyonlara sıfırlandı.", "info");
+      };
+
+      // =======================================================================
+      // FIREBASE CONFIG MODAL ACTIONS
+      // =======================================================================
+      const handleSaveFirebaseConfig = (e) => {
+        e.preventDefault();
+        const parsed = parseFirebaseConfigInput(fbConfigText);
+        if (!parsed) {
+          setFbModalError(
+            "Geçerli bir Firebase yapılandırması bulunamadı. Firebase Console > Project Settings içindeki firebaseConfig nesnesini yapıştırın."
+          );
+          return;
+        }
+        try {
+          localStorage.setItem(LOCAL_FB_CONFIG_KEY, JSON.stringify(parsed));
+        } catch (_) {}
+        setFbConfig(parsed);
+        setShowFbModal(false);
+        setFbModalError("");
+        showToast("Firebase yapılandırması kaydedildi, bağlanılıyor...", "info");
+      };
+
+      const handleDisconnectFirebase = () => {
+        try {
+          localStorage.removeItem(LOCAL_FB_CONFIG_KEY);
+        } catch (_) {}
+        setFbConfig(null);
+        setFbStatus("disconnected");
+        setShowFbModal(false);
+        showToast("Yerel Önizleme Moduna geçildi.", "info");
+      };
+
+      // =======================================================================
+      // EXPORT: WHATSAPP SUMMARY & CSV
+      // =======================================================================
+      const handleCopyWhatsApp = () => {
+        const lines = [
+          "🏥 *DÜZCE ÜNİVERSİTESİ RADYOLOJİ - İZİN LİSTESİ (Kasım 2026 – Mayıs 2027)*",
+          `📊 Durum: ${bookedCount}/${residents.length} Asistan Planlandı`,
+          "----------------------------------------",
+          "*KIDEM SIRASINA GÖRE LİSTE:*"
+        ];
+
+        residents.forEach((r, idx) => {
+          const w = LEAVE_WEEKS.find((wk) => wk.id === r.bookedWeekId);
+          const rotLabel = r.rotation ? `[${r.rotation}]` : "[Boş]";
+          const statusLabel = w ? `✅ ${w.label}` : r.skipped ? "⏭️ Beklemede" : "⏳ Sıra Bekliyor";
+          lines.push(`${idx + 1}. ${r.name} ${rotLabel} → ${statusLabel}`);
+        });
+
+        lines.push("----------------------------------------");
+        lines.push("*HAFTALARA GÖRE DAĞILIM:*");
+        LEAVE_WEEKS.forEach((w) => {
+          const bList = getWeekBookings(w.id);
+          if (bList.length > 0) {
+            const names = bList.map((b) => `${b.name} (${b.rotation || "Boş"})`).join(", ");
+            lines.push(`📅 *${w.label}*: ${names}`);
+          }
+        });
+
+        lines.push("----------------------------------------");
+        lines.push("_Designed by Halit_");
+
+        const text = lines.join("\n");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text);
+        } else {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+        }
+        setCopied(true);
+        showToast("WhatsApp özeti panoya kopyalandı!", "success");
+        setTimeout(() => setCopied(false), 2500);
+      };
+
+      const handleExportCSV = () => {
+        const headers = [
+          "Kıdem Sırası",
+          "Adı Soyadı",
+          "Rotasyon",
+          "Durum",
+          "Seçilen İzin Haftası",
+          "Resmi Tatil Notu"
+        ];
+        const rows = residents.map((r, idx) => {
+          const w = LEAVE_WEEKS.find((wk) => wk.id === r.bookedWeekId);
+          const status = r.bookedWeekId ? "Onaylandı" : r.skipped ? "Beklemede" : "Sıra Bekliyor";
+          return [
+            idx + 1,
+            `"${r.name}"`,
+            `"${r.rotation || "Boş (Atanmamış)"}"`,
+            `"${status}"`,
+            `"${w ? w.label : "-"}"`,
